@@ -1,0 +1,31 @@
+{
+  "devDependencies": {
+    "@types/express": "4.17.17",
+    "@types/node": "18.14.2",
+    "@typescript-eslint/eslint-plugin": "5.53.0",
+    "@typescript-eslint/parser": "5.53.0",
+    "eslint": "8.35.0",
+    "eslint-config-prettier": "8.6.0",
+    "eslint-plugin-node": "11.1.0",
+    "eslint-plugin-prettier": "4.2.1",
+    "nodemon": "2.0.20",
+    "prettier": "2.8.4",
+    "ts-node": "10.9.1",
+    "typescript": "4.9.5"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "3.279.0",
+    "@aws-sdk/util-dynamodb": "3.279.0",
+    "express": "4.18.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "scripts": {
+    "db:create-tables": "ts-node ./src/db/create-tables.ts",
+    "db:start": "docker run -p 8000:8000 amazon/dynamodb-local",
+    "lint": "eslint --fix ./src; tsc -p ./tsconfig.json --noEmit; prettier -w **/*.{html,json}",
+    "server:start": "nodemon -w ./src -e html,ts ./node_modules/.bin/ts-node ./src/server.ts"
+  }
+}

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GetSetUp coding demonstration task</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        font-size: 62.5%;
+      }
+
+      body {
+        background: #fff;
+        color: #0e0e10;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+          Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans',
+          'Helvetica Neue', sans-serif;
+        font-size: 1.6rem;
+      }
+
+      .btn {
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6rem;
+        font-weight: bold;
+        height: 4.8rem;
+        padding: 0 1.2rem;
+      }
+
+      .btn-primary {
+        background: #0e0e10;
+        border: 1px solid #0e0e10;
+        color: #fff;
+      }
+
+      .label {
+        display: inline-flex;
+        font-size: 1.4rem;
+        font-weight: bold;
+        padding-bottom: 0.8rem;
+      }
+
+      .text-input,
+      .textarea {
+        border: 1px solid #0e0e10;
+        border-radius: 0;
+        display: block;
+        font-family: inherit;
+        font-size: 1.6rem;
+        padding: 0 1.6rem;
+        width: 100%;
+      }
+
+      .text-input {
+        height: 4.8rem;
+      }
+
+      .textarea {
+        padding: 1.6rem;
+        resize: vertical;
+        width: 60rem;
+        max-width: 100%;
+      }
+
+      .page-title {
+        font-size: 3.2rem;
+        font-weight: bold;
+        margin: 0 auto 3.2rem auto;
+        text-align: center;
+      }
+
+      .main-container {
+        max-width: 64.8rem;
+        margin: 0 auto;
+        padding: 6.4rem 2.4rem 9.6rem 2.4rem;
+      }
+
+      .form-group + .form-group {
+        margin-top: 1.6rem;
+      }
+
+      #rating {
+        width: 9.6rem;
+      }
+
+      .submit-row {
+        margin-top: 3.2rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main-container">
+      <h1 class="page-title">Submit feedback</h1>
+      <form id="class-user-feedback-form">
+        <div class="form-group">
+          <label class="label" for="user-email">Email</label>
+          <input
+            class="text-input"
+            id="user-email"
+            name="user-email"
+            type="email"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label class="label" for="rating">Rate this class from 1 to 5</label>
+          <input
+            class="text-input"
+            id="rating"
+            name="rating"
+            type="number"
+            required
+            min="1"
+            max="5"
+            step="0.01"
+          />
+        </div>
+        <div class="form-group">
+          <label class="label" for="comment">Additional comments</label>
+          <textarea
+            class="textarea"
+            id="comment"
+            name="comment"
+            rows="3"
+          ></textarea>
+        </div>
+        <div class="submit-row">
+          <button class="btn btn-primary" type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
+    <script>
+      (function initialize() {
+        document
+          .querySelector('#class-user-feedback-form')
+          .addEventListener('submit', onSubmitFeedbackForm);
+
+        async function onSubmitFeedbackForm(event) {
+          event.preventDefault();
+
+          const urlParams = new URLSearchParams(window.location.search);
+          const formData = new FormData(event.target);
+          const data = {
+            userEmail: formData.get('user-email'),
+            classId: urlParams.get('cid'),
+            rating: formData.get('rating'),
+            comment: formData.get('comment'),
+          };
+
+          try {
+            const response = await fetch('/feedback/', {
+              method: 'POST',
+              body: JSON.stringify(data),
+              headers: {'Content-Type': 'application/json'},
+            });
+
+            if (response.ok && response.status === 200) {
+              alert('Feedback submitted successfully');
+            } else {
+              const responseJSON = await response.json();
+              alert(responseJSON.detail || 'Unexpected error occurred');
+            }
+          } catch (error) {
+            alert('Unexpected error occurred');
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>
